@@ -2,68 +2,102 @@
 #                WORLD CHAMPIONSHIP MATCH VISUSALISATIONS
 # =============================================================================
 
-# IDEA
-# Make graphics visualising the latest status of the World Championship match 
-# to share via Lichess blogs and social media posts. Initial design based on 
-# FiveThirtyEight's graphics for the 2021 Carlsen-Nepo match, eg 
-# https://53eig.ht/3EJG2ln (credit: Simran Parwani). Also note their 2018 graphics: 
+# Makes a multi-component graphic to visualise the status of the World 
+# Championship match between Ian Nepomniachtchi and Ding Liren in April 2023 - 
+# for sharing in Lichess blogs and social media posts. Design inspired by and 
+# based on Simran Parwani's graphics for FiveThirtyEight in 2021: 
+# https://53eig.ht/3EJG2ln. Also note their 2018 graphics: 
 # https://53eig.ht/2TCOYBN.
 
 # NOTES
 # - currently optimised for a 4-column layout
-# - lots still left to do
+
+# TODO
+# - add plot explanation element to left of today's game plot
+# - resize player colour indicators in top plot
+# - consider adding symbols (!, ? etc) to mark annotated/notable moves
+# - add arrows to annotations (?)
+# - hide extended gridlines in top plot (when notes appear above plot)
+# - hide tick marks in game plots (and top plot)
+# - consider alternative match score element designs
 
 # ----  USER CHOICES ----------------------------------------------------------
 
-test_mode <- TRUE
-choice <- "carlsen-karjakin"    # "carlsen-karjakin", "carlsen-caruana", "carlsen-nepo", "ding-nepo"
-todays_game <- 12
-todays_result <- "draw"         # "p1_win", "p2_win", "draw"
-
 output_format <- "png"
-all_games_cols <- 4             # how many games per row to show in "all games" element
+all_games_cols <- 4 
 
-colour_scheme <- "fivethirtyeight"
+choice <- "nepo-ding"    # "carlsen-karjakin", "carlsen-caruana", "carlsen-nepo", "nepo-ding"
+todays_game <- 2
+todays_result <- "p1_win"         # "p1_win", "p2_win", "draw"
+
+
+# ---- ANNOTATIONS ------------------------------------------------------------
+add_annotations <- TRUE
+
+# Game 2 
+annotations_2 <- tibble::tibble(
+  ply = c(7, 23, 36,58),
+  comment = c("Ding springs a major surprise with<br><b><span style = 'color:#922724;'>4. h3</span></b>,a novelty according to the<br>Lichess Masters database.",
+              "In the game's critical moment, Ding thinks<br>for 35 minutes before playing <b><span style = 'color:#922724;'>12. Nxf6</span></b>;<br>however, the myriad subsequent complications<br>soon appear to favour his opponent.",
+              "After slowly consolidating his position, Nepo signals his destructive<br>intent with <b><span style = 'color:#006994;'>18...f5</span></b>. Incredibly, White's cause already seems lost.",
+              "Ding resigns after <b><span style = 'color:#006994;'>29...e5</span></b>,<br>as Black's advanced c-pawn<br>will secure a winning endgame."),
+  x_adj = c(-3, -1.5, -6, -6.5), # moves
+  y_pos = c(-0.6, -0.8, 3, -0.4),
+  arrow_y = c(-0.3, -0.4, 2.25, -0.05),
+  arrow_yend = c(-0.55, -0.75, 2.5, -0.35),
+  x_just = c(0, 0, 0, 0),
+  y_just = c(1, 1, 1, 1)
+)
+
+# Pick annotations for today's game plot
+annotations <- annotations_2
+
 
 # ---- FONT CHOICES -----------------------------------------------------------
 
 font_1 <- "Noto Sans"
-font_2 <- "Roboto Mono"
+# font_2 <- "Source Sans Pro Light"
+# font_3 <- "Noto Sans Display"
+# font_4 <- "Cutive Mono"
 
 
 # ---- COLOUR CHOICES ---------------------------------------------------------
 
-p1_col <- "#e99676"               # player 1 (top half)
-p1_dark_col <- "#b73a0b"
-p2_col <- "#6fd1d7"               # player 2 (bottom half)
-p2_dark_col <- "#36a2a8"
+colours_538 <- c("#e99676", "#b73a0b", "#6fd1d7", "#36a2a8")
+colours_bluered <- c("#006994", "#006994", "#922724", "#922724")
 
-draw_col <- "#8C979A"                 # draws
+# PICK COLOUR SCHEME
+colours <- colours_bluered
+
+p1_col <- colours[1]             
+p1_dark_col <- colours[2]
+p2_col <- colours[3]      
+p2_dark_col <- colours[4]
+
+draw_col <- "#8C979A"                 
 draw_dark_col <- "#8C979A"
-eval_col <- "#010a1c"             # eval line on game plots  
-equality_col <- "#8C979A"         # x-axis on game plots
-
-# header_col <- "#373D3F"           # titles?
-
-plot_title_col <- "black"       # game plot titles
-plot_subtitle_col <- "purple"  # game plot subtitles
-
-grid_col <- "#cbcbcb"             # game plot gridlines
-axis_label_col <- "#cbcbcb"       # game plot axis labels
-
-footer_line_col <- "#8C979A"      # graphic footer line
-unplayed_text_col <- "#373D3F"    # text for unplayed games
-footer_text_col <- "#373D3F"      # graphic footer text
+eval_col <- "#010a1c"                 
+game_plot_title_col <- "#222021"
+todays_game_title_col <- "#222021"
+match_score_title_col <- "#222021"
+annotation_col <- "#373D3F"      
+annotation_arrow_col <- "#8C979A"
+grid_col <- "#cbcbcb"             
+axis_label_col <- "#8C979A"       
+footer_line_col <- "#8C979A"      
+unplayed_text_col <- "#373D3F"    
+footer_text_col <- "#373D3F"    
   
+
 
 
 # ---- SETUP ------------------------------------------------------------------
 
 # Load packages
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, data.table, rvest, cowplot, cli, ggtext, here,
-               patchwork, sysfonts, gridtext, grid, glue, extrafont, lubridate, 
-               conflicted, tictoc)
+pacman::p_load(dplyr, ggplot2, tibble, data.table, lubridate, rvest, cowplot, cli, ggtext, here,
+               patchwork, sysfonts, gridtext, grid, glue, extrafont,
+               conflicted, tictoc, fs, readr, stringr, showtext)
 
 tictoc::tic("Produced graphic")
 
@@ -75,33 +109,35 @@ conflicted::conflict_prefer("day", "lubridate")
 conflicted::conflict_prefer("hour", "lubridate")
 conflicted::conflict_prefer("minute", "lubridate")
 
-# library(showtext)
-# showtext::showtext_auto()
-# showtext::showtext_opts(dpi=500)
-# sysfonts::font_add_google("Noto Sans", family = "Noto Sans")
-# sysfonts::font_add_google("Cutive Mono", family = "cutive")
+showtext::showtext_auto()
+showtext::showtext_opts(dpi=500)
+sysfonts::font_add_google("Noto Sans", family = "Noto Sans")
+# sysfonts::font_add_google("Source Sans Pro Light", family = "Source Sans Pro", regular.wt = 300)
 
 # Load fonts
-extrafont::loadfonts(device = "all", quiet = TRUE) 
+# extrafont::loadfonts(device = "all", quiet = TRUE) 
 
 
-result_palette <- list("draw" = draw_col,
-                       "p1" = p1_col,
-                       "p2" = p2_col)
+result_palette <- list("draw" = draw_dark_col,
+                       "p1" = p1_dark_col,
+                       "p2" = p2_dark_col)
 
 # Path to Lichess logo (for footer)
 logo_path <- paste0(here::here(), "/lichess_logo.png")
+white_pawn_path <- paste0(here::here(), "/w_pawn_svg_NoShadow.png")
+black_pawn_path <- paste0(here::here(), "/b_pawn_svg_NoShadow.png")
+
 
 latest_game <- todays_game
 
-if(choice == "ding-nepo"){
-  p1 <- "Ding Liren"
-  p2 <- "Ian Nepomniachtchi"
+if(choice == "nepo-ding"){
+  p1 <- "Ian Nepomniachtchi"
+  p2 <- "Ding Liren"
   site <- "Astana"
-  p1_elo <- "2500"
   p2_elo <- "2500"
-  p1_flag <- "CHI"
-  p2_flag <- "FID"
+  p1_elo <- "2500"
+  p2_flag <- "CHI"
+  p1_flag <- "FID"
   match_length <- 15
   match_year <- 2023
   dates <- c(
@@ -180,8 +216,14 @@ site <- str_extract(games[[2]], "\\[Site .+\\]") %>%
   str_squish()
 
 # Short player names
-p1_short <- str_to_title(sort(unlist(str_split(choice, "-")))[1])
-p2_short <- str_to_title(sort(unlist(str_split(choice, "-")))[2])
+if(choice == "nepo-ding"){
+  p1_short <- "Nepo"
+  p2_short <- "Ding"
+} else{
+  p1_short <- str_to_title(sort(unlist(str_split(choice, "-")))[1])
+  p2_short <- str_to_title(sort(unlist(str_split(choice, "-")))[2])
+}
+
 
 p1_pgn <- paste0(str_split(p1, " ")[[1]][2], ", ", 
                  str_split(p1, " ")[[1]][1])
@@ -274,8 +316,6 @@ for (g in c(2:length(games))) {
 
 rm(game_data)
 
-# ---- MAKE GAME EVAL PLOTS ---------------------------------------------------
-
 # Store game eval plots in new list
 match_plots <- vector(mode = "list", length = match_length)
 
@@ -315,8 +355,8 @@ game_summary <- game_summary %>%
     TRUE ~ NA_character_
   ))
 
+# ---- GAME PLOTS -------------------------------------------------------------
 
-# Make game plots
 for(g in c(1:length(match_games))){
 
   # Only plot evals for played games up to the "latest" game (specified in options)
@@ -324,9 +364,7 @@ for(g in c(1:length(match_games))){
     
     # If the "latest" game is the tiebreaks, plot the last classical game instead
     # Only relevant for testing
-    
     game <- match_games[[g]]
-    
     if(game_titles[g] == "Tiebreaks") {
       game <- match_games[[g - 1]]
       game <- tibble::as_tibble(game)
@@ -335,12 +373,17 @@ for(g in c(1:length(match_games))){
     # Make SF evals consistent across game plots
     game <- game %>%
       arrange(ply) %>% 
-      mutate(evalp = ifelse(str_detect(white, p1_short), eval, eval * -1))
+      mutate(evalp = ifelse(str_detect(white, p1_short), 
+                            pmax(pmin(eval, 2.2), -2.2), 
+                            pmax(pmin(eval * -1, 2.2), -2.2)))
     
     # Create plot
     match_plots[[g]] <- ggplot(game, 
                                aes(x = ply/2, 
                                    y = evalp)) +
+      
+      # Restrict the y-axis to [-2.2, 2.2]
+      ylim(c(-2.2, 2.2)) +
       
       # Shade regions where the eval favours player 1
       geom_rect(aes(
@@ -389,71 +432,50 @@ for(g in c(1:length(match_games))){
       #   linetype = "solid"
       # ) +
       
-      # Restrict the y-axis to [-2.2, 2.2]
-      ylim(c(-2.2, 2.2)) +
+      # # Restrict the y-axis to [-2.2, 2.2]
+      # ylim(c(-2.2, 2.2)) +
+      
+      
       
       
       labs(
         
-        # Make plot title "Game X"
+        # Plot titles: "Game [g]    [result]"
         title = paste0(
-          "<b>", game_titles[g], "</b> - ",
-          game_summary$result_plotlabel_text[g]
+          "<b>", game_titles[g], "</b>    ", "<b><span style = 'color:", 
+          game_summary$result_plotlabel_colour[g],
+          ";'>", game_summary$result_plotlabel_text[g], "</span></b>"
           ),
-        
-        # Make the plot subtitle show the result
-        subtitle = paste0(game_summary$result_plotlabel_text[g]),
         
         x = "Move",
         y = "Eval") +
       
-      # Indicate players' colours - TEMPORARY
-      geom_richtext(aes(x = 0,
-                        y = 2),
-                    label = str_extract(game_summary$p1_col[g], "^.{1}"),
-                    family = font_1,
-                    size = 1.5,
-                    hjust = 0.5,
-                    vjust = 0.5,
-                    colour = p1_col,
-                    fill = NA,
-                    label.colour = NA,
-                    label.padding = grid::unit(rep(0, 4), "pt")
-                    ) +
-      geom_richtext(aes(x = 0,
-                        y = -2),
-                    label = str_extract(game_summary$p2_col[g], "^.{1}"),
-                    family = font_1,
-                    size = 1.5,
-                    hjust = 0.5,
-                    vjust = 0.5,
-                    colour = p2_col,
-                    fill = NA,
-                    label.colour = NA,
-                    label.padding = grid::unit(rep(0, 4), "pt")
+      # Indicate players' colours
+      
+      geom_point(aes(x = 0,
+                     y = 2),
+                 shape = 21,
+                 colour = "black",
+                 fill = ifelse(game_summary$p1_col[g] == "white", "white", "black"),
+                 size = 0.8,
+                 stroke = 0.3
+      ) +
+      geom_point(aes(x = 0,
+                     y = -2),
+                 shape = 21,
+                 colour = "black",
+                 fill = ifelse(game_summary$p2_col[g] == "white", "white", "black"),
+                 size = 0.8,
+                 stroke = 0.3
       ) +
       
-      
-      
-      
-      # # Add label with game result
-      # geom_richtext(aes(x = 30,
-      #                   y = -1),
-      #               label = game_summary$result_plotlabel_text[g],
-      #               family = "Noto Sans",
-      #               size = 1,5,
-      #               hjust = 0.5,
-      #               vjust = 0.5,
-      #               colour = game_summary$result_plotlabel_colour[g],
-      #               fill = NA,
-      #               label.colour = NA,
-      #               label.padding = grid::unit(rep(0, 4), "pt")
-      #               ) +
+      scale_x_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120),
+                         labels = c("0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100", "110", "120")) +
       
       # Customise plot look
       ggplot2::theme_void() +
       ggplot2::theme(
-        plot.title.position = "plot",
+        # plot.title.position = "plot",
         panel.background = element_blank(),
         panel.grid.major = element_line(colour = grid_col, linewidth = 0.1),
         panel.grid.minor = element_blank(),
@@ -461,36 +483,39 @@ for(g in c(1:length(match_games))){
         axis.title = element_blank(),
         axis.ticks = element_blank(),
         # axis.text.y = element_text(family = "Noto Sans", colour = axis),
+        axis.text.x = element_text(family = font_1, colour = axis_label_col, size = 3.5),
+        axis.text.y = element_blank(),
         # axis.text.x = element_blank(),
-        
-        axis.text = element_text(family = font_2, colour = axis_label_col, size = 3.5),
         
         plot.title = ggtext::element_textbox(
           family = font_1, 
-          size = 4, 
+          size = 4.2, 
           lineheight = 1,
-          hjust = 0.5, 
+          hjust = 0, 
           vjust = 0.5,
-          colour = plot_title_col,
-          padding = margin(0.4, 0.4, 0.4, 0.4, "mm"),
+          colour = game_plot_title_col,
+          padding = margin(0.3, 0.3, 0.3, 0.3, "mm")#,
           # margin(t = 0, l = 0, r = 5.5, b = 0, "mm"),
-          fill = ifelse(game_summary$result_plotlabel_text[g] == "Draw", NA,
-                        ifelse(game_summary$result_plotlabel_text[g] == paste0(p1_short, " wins"), p1_col, p2_col))
+          # fill = ifelse(game_summary$result_plotlabel_text[g] == "Draw", NA,
+          #               ifelse(game_summary$result_plotlabel_text[g] == paste0(p1_short, " wins"), p1_col, p2_col))
           ),
-        
-        # plot.subtitle = ggtext::element_textbox(
-        #   family = "Noto Sans", 
-        #   size = 3.6, 
-        #   hjust = 0.5, 
-        #   vjust = 0.5,
-        #   colour = plot_subtitle_col,
-        #   margin(t = 0, l = 0, r = 0, b = 0, "mm")),
         
         plot.subtitle = element_blank(),
         
         plot.caption = element_blank(),
-        plot.margin = margin(0.2, 0.2, 0.2, 0.2, "mm")
-      )
+        plot.margin = margin(0, 2, 2, 0, "mm"))
+    
+    # Only show y-axis labels for left-most plots
+    if((g - 1 == 0) || 
+       ((g - 1) %% all_games_cols == 0)){
+      match_plots[[g]] <- match_plots[[g]] +
+        scale_y_continuous(breaks = c(-2, -1, 0, 1, 2),
+                           labels = c("+2", "+1", "EVEN", "+1", "+2")) +
+        
+        theme(axis.text.y = element_text(family = font_1, colour = axis_label_col, size = 3.5),
+              axis.text.x = element_text(family = font_1, colour = axis_label_col, size = 3.5))
+    }
+
   }
   
   else {
@@ -506,12 +531,12 @@ for(g in c(1:length(match_games))){
       theme_void() +
       ggtext::geom_richtext(aes(0,0),
                             label = dates[g], 
-                            family = font_2,
+                            family = font_1,
                             size = 1.5,
                             text.colour = unplayed_text_col,
                             label.colour = "#ffffff") +
       # add game number
-      labs(title = game_titles[g],
+      labs(title = glue("**{game_titles[g]}**"),
            x = "Move",
            y = "Eval") +
   
@@ -523,16 +548,16 @@ for(g in c(1:length(match_games))){
         
         plot.title = ggtext::element_textbox(
           family = font_1, 
-          size = 4, 
-          hjust = 0.5, 
+          size = 4.2, 
+          hjust = 0, 
           vjust = 0.5,
-          padding = margin(0.4, 0.4, 0.4, 0.4, "mm"),
-          colour = plot_title_col),
+          padding = margin(0.3, 0.3, 0.3, 0.3, "mm"),
+          colour = game_plot_title_col),
         
         # plot.subtitle = ggtext::element_textbox(family = "Noto Sans", size = 3.2, hjust = 0.5,
         #                                 colour = plot_title_col),
         
-        plot.margin = margin(0.2, 0.2, 0.2, 0.2, "mm")
+        plot.margin = margin(0, 2, 2, 0, "mm")
       )
       }
   }
@@ -583,26 +608,190 @@ today_plot <- match_plots[[todays_game]]
 
 # Construct element
 today_element <- today_plot +
-  labs(title = "Today's game",
+  labs(title = glue("**Today's game**"),
        x = "Evaluation",
-       y = "Move")
-
+       y = "Move") +
   
-  # # Add custom annotations to "today's game plot"
-  # geom_richtext(
-  #   aes(x = 27, y = -1,
-  #       label = glue::glue("An example of an annotation")
-  #   ),
-  #   family = "Noto Sans",
-  #   colour = footer_text_col,
-  #   fill = NA, label.color = NA,
-  #   label.padding = grid::unit(rep(0, 4), "pt"),
-  #   size = 1.4,
-  #   hjust = 0.5,
-  #   vjust = 1
+  theme_void() +
+  
+  # ylim(c(-2.2, 2.2)) +
+  
+  scale_y_continuous(breaks = c(-2, -1, 0, 1, 2),
+                     labels = c("+2", "+1", "EVEN", "+1", "+2")
+                     ) +
+  
+  scale_x_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100),
+                     labels = c("0 moves", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100")
+                     ) +
+  
+  theme(
+    plot.title.position = "plot",
+    # plot.title = element_blank(),
+    plot.title = ggtext::element_markdown(family = font_1, size = 6, lineheight = 1, hjust = 0,
+                                          colour = todays_game_title_col),
+    plot.subtitle = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major = element_line(colour = grid_col, linewidth = 0.1),
+    panel.grid.minor = element_blank(),
+    axis.line = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_text(family = font_1, colour = axis_label_col, size = 4.5)
+  )#  +
+  
+  # # Add moves text in x-axis
+  # annotate("text",
+  #          x = 1/2,
+  #          y = -3,
+  #          label = glue::glue("moves"),
+  #          size = 1.5,
+  #          colour = axis_label_col,
+  #          family = font_1,
+  #          hjust = 0,
+  #          vjust = 0.5
   # )
+  # 
+  
+
+# Add annotations to plot
+if(add_annotations){
+  
+  today_element <- today_element +
+    
+    geom_segment(data = annotations,
+      aes(
+        x = ply/2,
+        xend = ply/2,
+        y = arrow_y,
+        yend = arrow_yend),
+      colour = annotation_arrow_col,
+      size = 0.2,
+      linetype = "dotted"
+    ) +
+    
+    # # Add annotation points
+    # annotate("point",
+    #          x = match_games[[todays_game]]$ply[annotations$ply]/2,
+    #          y = ifelse(game_summary$p1_col[todays_game] == "white",
+    #                     match_games[[todays_game]]$eval[annotations$ply],
+    #                     match_games[[todays_game]]$eval[annotations$ply] * -1),
+    #          colour = "red",
+    #          size = 1) +
+    
+    # Add annotation text
+    geom_richtext(
+      data = annotations, 
+      aes(x = ply/2 + x_adj,
+          y = y_pos,
+          label = comment),
+      family = font_1,
+      colour = annotation_col,
+      size = 1.3,
+      fill = "white", 
+      label.color = NA,
+      label.padding = grid::unit(rep(0, 4), "pt"),
+      hjust = annotations$x_just,
+      vjust = annotations$y_just
+    ) # +
+    
+    # annotation_custom(
+    #   grob = textGrob("test"),
+    #   ymin = 3, ymax = 3, xmin = 10, xmax = 10
+    # )
+}
+
+# ---- EXPLAINER FOR TODAY'S PLOT --------------------------------------------- 
+
+explainer <- ggplot(match_games[[1]], 
+                    aes(x = ply/2, y = evalp)) +
+  theme_void() +
+  ylim(c(-2.2, 2.2)) +
+  xlim(c(0, 5)) +
+  
+  geom_segment(
+               aes(
+                 x = 5,
+                 xend = 5,
+                 y = 1,
+                 yend = 2),
+               colour = p1_col,
+               size = 1,
+               arrow = arrow(length = unit(0.02, "npc"),
+                             type = "closed"),
+  ) +
+
+  geom_segment(
+    aes(
+      x = 5,
+      xend = 5,
+      y = -1,
+      yend = -2),
+    colour = p2_col,
+    size = 1,
+    arrow = arrow(length = unit(0.02, "npc"),
+                  type = "closed"),
+  ) +
+  
+  annotate("text",
+           x = 2,
+           y = 1.5,
+           label = glue("{p1_short}'s position is better"),
+           size = 1,
+           colour = axis_label_col,
+           family = font_1,
+           hjust = 0.5,
+           vjust = 0.5
+  ) +
+  
+  annotate("text",
+           x = 2,
+           y = 0,
+           label = glue("The position is equal"),
+           size = 1,
+           colour = axis_label_col,
+           family = font_1,
+           hjust = 0.5,
+           vjust = 0.5
+  ) +
+  
+  annotate("text",
+           x = 2,
+           y = -1.5,
+           label = glue("{p2_short}'s position is better"),
+           size = 1,
+           colour = axis_label_col,
+           family = font_1,
+           hjust = 0.5,
+           vjust = 0.5
+  )
+
+explainer
+  
+  
 
 # ---- MATCH SCORE TRACKER ----------------------------------------------------
+
+# Count number of wins for each player and draws
+num_p1_wins <- sum(str_count(game_summary$result_plotlabel_text, p1_short))
+num_p2_wins <- sum(str_count(game_summary$result_plotlabel_text, p2_short))
+num_draws <- todays_game - num_p1_wins - num_p2_wins
+
+# Convert to player scores in character format
+p1_score <- num_p1_wins + (num_draws * 0.5)
+p1_score <- ifelse(is.integer(p1_score - 0.5),
+                   paste0(
+                     as.character(p1_score - 0.5),
+                     "\u00bd"),
+                   as.character(p1_score))
+
+p2_score <- num_p2_wins + (num_draws * 0.5)
+p2_score <- ifelse(is.integer(p2_score - 0.5),
+                   paste0(
+                     as.character(p2_score - 0.5),
+                     "\u00bd"),
+                   as.character(p2_score))
+
+
 
 # Placeholder
 score_placeholder <- gridtext::textbox_grob(text = "A match score graphic will go here",
@@ -611,57 +800,75 @@ score_placeholder <- gridtext::textbox_grob(text = "A match score graphic will g
                                 height = unit(1, "npc"),
                                 gp = grid::gpar(fontsize = 6, col = footer_line_col))
 
-# Count number of wins for each player and draws
-num_p1_wins <- sum(str_count(game_summary$result_plotlabel_text, p1_short))
-num_p2_wins <- sum(str_count(game_summary$result_plotlabel_text, p2_short))
-num_draws <- todays_game - num_p1_wins - num_p2_wins
 
 # FiveThirtyEight (2021) style element
-score <- grid::grobTree(
+score_538 <- grid::grobTree(
   
-  # Line above match score
-  grid::linesGrob(
-    x = grid::unit(c(0, 1), "npc"),
-    y = grid::unit(0.8, "npc"),
-    gp = grid::gpar(col = footer_line_col,
-                    lty = "dotted",
-                    lwd = 0.5)),
+  # # Line above match score
+  # grid::linesGrob(
+  #   x = grid::unit(c(0.2, 0.4), "npc"),
+  #   y = grid::unit(0.9, "npc"),
+  #   gp = grid::gpar(col = footer_line_col,
+  #                   lty = "solid",
+  #                   lwd = 0.3)),
+  # 
+  # grid::linesGrob(
+  #   x = grid::unit(c(0.6, 0.8), "npc"),
+  #   y = grid::unit(0.9, "npc"),
+  #   gp = grid::gpar(col = footer_line_col,
+  #                   lty = "solid",
+  #                   lwd = 0.3)),
   
-  # "Current score"
-  gridtext::richtext_grob(
-    text = glue("**CURRENT RECORD**"),
-    x = 0,
-    hjust = 0,
+  
+  
+  grid::textGrob(
+    label = glue("Match score"),
+    x = 0.5, y= 0.75,
+    hjust = 0.5,
     vjust = 0.5,
     gp = grid::gpar(
-      fontsize = 7.2,
-      fontfamily = font_2,
-      col = "black")
+      fontsize = 6,
+      fontfamily = font_1,
+      # fontface = "bold",
+      col = match_score_title_col)
   ),
+  
+  # # "Current score"
+  # gridtext::richtext_grob(
+  #   text = glue("**CURRENT RECORD**"),
+  #   x = 0,
+  #   hjust = 0,
+  #   vjust = 0.5,
+  #   gp = grid::gpar(
+  #     fontsize = 7,
+  #     fontfamily = font_1,
+  #     col = "black")
+  # ),
   
   
   # P1 name
-  gridtext::richtext_grob(
-    text = glue(str_to_upper(p1_short)),
-    x = 0.3,
-    hjust = 0,
+  grid::textGrob(
+    label = glue("{str_to_upper(p1)}"),
+    x = 0.4,
+    hjust = 1,
     vjust = 0.5,
     gp = grid::gpar(
-      fontsize = 7.2,
-      fontfamily = font_2,
+      fontsize = 7,
+      fontfamily = font_1,
+      fontface = "bold",
       col = p1_dark_col)
   ),
   
   # P1 wins
   gridtext::richtext_grob(
-    text = glue(num_p1_wins),
+    text = glue("**{p1_score}**"),
     x = 0.5,
     hjust = 1,
     vjust = 0.5,
-    padding = unit(c(.5, 1, .5, 1), "mm"),
+    padding = unit(c(.5, 2, .5, 2), "mm"),
     gp = grid::gpar(
-      fontsize = 7.2,
-      fontfamily = font_2,
+      fontsize = 7,
+      fontfamily = font_1,
       col = "white"),
     box_gp = grid::gpar(
       fill = p1_dark_col
@@ -669,129 +876,107 @@ score <- grid::grobTree(
   ),
   
   # P2 name
-  gridtext::richtext_grob(
-    text = glue(str_to_upper(p2_short)),
-    x = 0.55,
+  grid::textGrob(
+    label = glue("{str_to_upper(p2)}"),
+    x = 0.6,
     hjust = 0,
     vjust = 0.5,
     gp = grid::gpar(
-      fontsize = 7.2,
-      fontfamily = font_2,
+      fontsize = 7,
+      fontfamily = font_1,
+      fontface = "bold",
       col = p2_dark_col)
   ),
   
   # P2 wins
   gridtext::richtext_grob(
-    text = glue(num_p2_wins),
-    x = 0.77,
-    hjust = 1,
+    text = glue("**{p2_score}**"),
+    x = 0.5,
+    hjust = 0,
     vjust = 0.5,
-    padding = unit(c(.5, 1, .5, 1), "mm"),
+    padding = unit(c(.5, 2, .5, 2), "mm"),
     gp = grid::gpar(
-      fontsize = 7.2,
-      fontfamily = font_2,
+      fontsize = 7,
+      fontfamily = font_1,
       col = "white"),
     box_gp = grid::gpar(
       fill = p2_dark_col
     )
   ),
   
-  # Draws text
-  gridtext::richtext_grob(
-    text = glue("**DRAWS**"),
-    x = 0.82,
-    hjust = 0,
+  # Text underneath
+  grid::textGrob(
+    label = glue("First to 7.5 points wins"),
+    x = 0.5, y = 0.3,
+    hjust = 0.5,
     vjust = 0.5,
     gp = grid::gpar(
-      fontsize = 7.2,
-      fontfamily = font_2,
-      col = draw_dark_col)
+      fontsize = 4,
+      fontfamily = font_1,
+      fontface = "italic",
+      col = footer_line_col)
   ),
   
-  # Number of draws
-  gridtext::richtext_grob(
-    text = glue("**{num_draws}**"),
-    x = 1,
-    hjust = 1,
-    vjust = 0.5,
-    padding = unit(c(.5, 1, .5, 1), "mm"),
-    gp = grid::gpar(
-      fontsize = 7.2,
-      fontfamily = font_2,
-      col = "white"),
-    box_gp = grid::gpar(
-      fill = draw_dark_col
-    )
-  ),
-  
-  # Line below 
+  # Line below
   grid::linesGrob(
     x = grid::unit(c(0, 1), "npc"),
-    y = grid::unit(0.2, "npc"),
+    y = grid::unit(0.1, "npc"),
     gp = grid::gpar(col = footer_line_col,
                     lty = "dotted",
-                    lwd = 0.5)
+                    lwd = 0.3)
     )
 )
 
-# # Wikipedia-style element - DON'T LIKE
+
+
+# # Tabular-style score element
+# score_table <- grid::grobTree(
 # 
-# # Extract both players' points per game to date
-# p1_points <- rep(0.5, latest_game) # just for testing
-# p2_points <- rep(0.5, latest_game) # ditto
-# p1_points_print <- stringr::str_replace(p1_points, "0.5", "\u00bd")
-# p2_points_print <- stringr::str_replace(p2_points, "0.5", "\u00bd")
-# 
-# # Tiebreak points should be empty
-# p1_points_print <- c(p1_points_print, rep("", match_length - length(p1_points)))
-# p2_points_print <- c(p2_points_print, rep("", match_length - length(p2_points)))
-# 
-# # Make score graphic
-# score <- grid::grobTree(
-#   
 #   # Game numbers
 #   grid::textGrob(c(1:(match_length-1), "T"), x = c(seq(0.25, 0.85, by = (0.85 - 0.25) / (match_length - 1))), y = 0.75,
 #                  hjust = 0.5, vjust = 0.5,
 #                  gp = grid::gpar(fontsize = 4, col = footer_text_col)),
-#   
+# 
 #   # # Score heading
 #   # grid::textGrob("Score", x = 0.9, y = 0.75,
 #   #                hjust = 0.5, vjust = 0.5,
 #   #                gp = grid::gpar(fontsize = 4, col = "blue")),
-#   
+# 
 #   # P1 name
 #   grid::textGrob(p1_short, x = 0.1, y = 0.45,
 #                  hjust = 0, vjust = 0.5,
 #                  gp = grid::gpar(fontsize = 4, col = footer_text_col)),
-#   
+# 
 #   # P2 name
 #   grid::textGrob(p2_short, x = 0.1, y = 0.2,
 #                  hjust = 0, vjust = 0.5,
 #                  gp = grid::gpar(fontsize = 4, col = footer_text_col)),
-#   
+# 
 #   # P1 points
 #   grid::textGrob(p1_points_print, x = c(seq(0.25, 0.85, by = (0.85 - 0.25) / (match_length - 1))), y = 0.45,
 #                  hjust = 0.5, vjust = 0.5,
 #                  gp = grid::gpar(fontsize = 4.5, col = footer_text_col)),
-#   
+# 
 #   # P1 match score
 #   grid::textGrob(sum(p1_points), x = 0.92, y = 0.45,
 #                  hjust = 0.5, vjust = 0.5,
 #                  gp = grid::gpar(fontsize = 5.5, col = "black")),
-#   
+# 
 #   # P2 points
 #   grid::textGrob(p2_points_print, x = c(seq(0.25, 0.85, by = (0.85 - 0.25) / (match_length - 1))), y = 0.2,
 #                  hjust = 0.5, vjust = 0.5,
 #                  gp = grid::gpar(fontsize = 4.5, col = footer_text_col)),
-#   
+# 
 #   # P2 match score
 #   grid::textGrob(sum(p2_points), x = 0.92, y = 0.2,
 #                  hjust = 0.5, vjust = 0.5,
 #                  gp = grid::gpar(fontsize = 5.5, col = "black"))
-#   
-#   
+# 
+# 
 # )
 
+# Pick score element (score_538, score_table, score_placeholder)
+score_element <- score_538
 
 # ---- FOOTER -----------------------------------------------------------------
 
@@ -800,21 +985,30 @@ footer <- grid::grobTree(
   # Line above footer
   grid::linesGrob(
     x = grid::unit(c(0, 1), "npc"),
-    y = grid::unit(0.6, "npc"),
+    y = grid::unit(0.7, "npc"),
     gp = grid::gpar(col = footer_line_col,
-                    lwd = 0.5)),
+                    lwd = 0.3)),
   
   # Footer text
-  gridtext::richtext_grob(
-    text = paste0("Games ", "analysed ", "by ", "Stockfish ", "14+", " NNUE", 
-                  "<br>","<b>Design credit</b>", ": ", "Simran Parwani"),
-    x = 0, y = 0.5,
+  grid::textGrob(
+    label = paste0("Analysis by Stockfish 15.1 NNUE"),
+                   x = 0, y = 0.5,
+                   hjust = 0, vjust = 1,
+                   gp = grid::gpar(
+                     fontsize = 4.5,
+                     fontfamily = font_1,
+                     col = footer_text_col)
+  ), 
+  
+  grid::textGrob(
+    label = paste0("Design inspired by Simran Parwani's graphics for FiveThirtyEight"),
+    x = 0, y = 0.24,
     hjust = 0, vjust = 1,
     gp = grid::gpar(
       fontsize = 4.5,
-      fontfamily = font_2,
+      fontfamily = font_1,
       col = footer_text_col)
-    ),
+  ), 
     
   # Lichess logo (on right)
   grid::rasterGrob(png::readPNG(logo_path), 
@@ -829,14 +1023,12 @@ all_games <- patchwork::wrap_plots(match_plots, ncol = all_games_cols)
 
 # ---- COMPILE/SAVE FINAL IMAGE -----------------------------------------------
 
-graphic <- (today_element / score / all_games / footer) + 
-  plot_layout(ncol = 1, heights = c(3, 1, 6, 0.5))
+graphic <- (today_element / score_element / all_games / footer) + 
+  plot_layout(ncol = 1, heights = c(4, 2, 8, 0.8))
 
 # Save image
-test_status <- ifelse(test_mode, "TEST_", "")
 
-filename <- paste0(test_status,
-                   p1_short, "_", p2_short, "_", "Game_", todays_game, "_",
+filename <- paste0(p1_short, "_", p2_short, "_", "Game_", todays_game, "_",
                    str_remove_all(now("UTC"), "-|:|\\s"),
                    ".", 
                    output_format)
@@ -851,3 +1043,7 @@ ggplot2::ggsave(filename = filename,
                 dpi = 500)
 
 tictoc::toc(log = T)
+
+fs::file_show(paste0(here::here(), "/outputs/", filename))
+
+              

@@ -1,0 +1,24 @@
+[Event "FIDE World Championship Match 2024"]
+[Site "Singapore SGP"]
+[Date "2024.12.01"]
+[Round "6"]
+[White "Ding, Liren"]
+[Black "Gukesh D"]
+[Result "1/2-1/2"]
+[WhiteElo "2728"]
+[WhiteTitle "GM"]
+[WhiteFideId "8603677"]
+[BlackElo "2783"]
+[BlackTitle "GM"]
+[BlackFideId "46616543"]
+[TimeControl "40/7200:1800+30"]
+[Variant "Standard"]
+[ECO "A45"]
+[Opening "Indian Defense"]
+[Annotator "https://lichess.org/broadcast/-/-/I2LcDwAT"]
+[StudyName "Game 6"]
+[ChapterName "Ding, Liren - Gukesh D"]
+
+1. d4 { [%eval 0.17] [%clk 1:59:53] } 1... Nf6 { [%eval 0.17] [%clk 1:59:53] } 2. Bf4 { [%eval 0.05] [%clk 1:59:40] } 2... d5 { [%eval 0.17] [%clk 1:59:45] } 3. e3 { [%eval 0.04] [%clk 1:59:36] } 3... e6 { [%eval 0.12] [%clk 1:59:18] } 4. Nf3 { [%eval 0.08] [%clk 1:59:24] } 4... c5 { [%eval 0.14] [%clk 1:59:11] } 5. c3 { [%eval 0.0] [%clk 1:58:39] } 5... Bd6 { [%eval 0.1] [%clk 1:58:54] } 6. Bb5+ { [%eval 0.0] [%clk 1:57:54] } 6... Nc6 { [%eval 0.0] [%clk 1:58:44] } 7. Bxc6+ { [%eval 0.09] [%clk 1:57:28] } 7... bxc6 { [%eval 0.02] [%clk 1:58:35] } 8. Bxd6 { [%eval 0.0] [%clk 1:57:26] } 8... Qxd6 { [%eval 0.03] [%clk 1:58:27] } 9. Qa4 { [%eval 0.07] [%clk 1:57:24] } 9... O-O { [%eval 0.11] [%clk 1:56:21] } 10. Qa3 { [%eval 0.13] [%clk 1:57:19] } 10... Ne4 { [%eval 0.14] [%clk 1:54:45] } 11. Nfd2 { [%eval 0.0] [%clk 1:57:13] } 11... e5 { [%eval 0.0] [%clk 1:54:00] } 12. Nxe4 { [%eval 0.0] [%clk 1:56:57] } 12... dxe4 { [%eval 0.0] [%clk 1:53:55] } 13. Qxc5 { [%eval 0.0] [%clk 1:56:27] } 13... Qg6 { [%eval 0.0] [%clk 1:53:49] } 14. Nd2 { [%eval 0.0] [%clk 1:56:19] } 14... Qxg2 { [%eval 0.0] [%clk 1:52:41] } 15. O-O-O { [%eval 0.0] [%clk 1:56:14] } 15... Qxf2 { [%eval 0.0] [%clk 1:51:52] } 16. dxe5 { [%eval 0.0] [%clk 1:55:01] } 16... Rb8 { [%eval 0.0] [%clk 1:45:20] } 17. Nc4 { [%eval 0.0] [%clk 1:54:27] } 17... Be6 { [%eval 0.17] [%clk 1:30:41] } 18. Rd2 { [%eval 0.14] [%clk 1:53:51] } 18... Qf3 { [%eval 0.2] [%clk 1:30:27] } 19. Re1 { [%eval 0.25] [%clk 1:53:42] } 19... Bxc4 { [%eval 0.0] [%clk 1:10:56] } 20. Qxc4 { [%eval 0.0] [%clk 1:53:16] } 20... Qf5 { [%eval 0.45] [%clk 1:07:38] } 21. Qxc6 { [%eval 0.4] [%clk 1:10:34] } 21... Qxe5 { [%eval 0.55] [%clk 1:07:10] } 22. Qd5 { [%eval 0.46] [%clk 1:06:03] } 22... Qe7 { [%eval 0.36] [%clk 1:06:45] } 23. Qd6 { [%eval 0.35] [%clk 1:02:03] } 23... Qg5 { [%eval 0.58] [%clk 1:03:02] } 24. Qd5 { [%eval 0.4] [%clk 1:01:30] } 24... Qe7 { [%eval 0.49] [%clk 0:57:28] } 25. Qd6 { [%eval 0.25] [%clk 0:57:19] } 25... Qg5 { [%eval 0.32] [%clk 0:57:22] } 26. Qd5 { [%eval 0.0] [%clk 0:57:03] } 26... Qh4?! { [%eval 0.74] } { Inaccuracy. Qe7 was best. } { [%clk 0:57:16] } (26... Qe7) 27. Red1 { [%eval 0.74] [%clk 0:55:34] } 27... g6 { [%eval 0.85] [%clk 0:54:01] } 28. Qe5 { [%eval 0.47] [%clk 0:50:48] } 28... Rbe8 { [%eval 0.51] [%clk 0:46:52] } 29. Qg3 { [%eval 0.23] [%clk 0:37:34] } 29... Qh5 { [%eval 0.57] [%clk 0:45:17] } 30. Qf4 { [%eval 0.6] [%clk 0:32:28] } 30... Qa5 { [%eval 0.77] [%clk 0:37:12] } 31. a3 { [%eval 0.86] [%clk 0:32:03] } 31... Qb5 { [%eval 0.83] [%clk 0:19:03] } 32. Rd4 { [%eval 0.78] [%clk 0:30:08] } 32... Qe2 { [%eval 0.67] [%clk 0:17:22] } 33. R1d2 { [%eval 0.8] [%clk 0:24:58] } 33... Qf3 { [%eval 0.67] [%clk 0:11:45] } 34. Kc2 { [%eval 0.17] [%clk 0:13:17] } 34... Qxf4 { [%eval 0.09] [%clk 0:10:20] } 35. exf4 { [%eval 0.15] [%clk 0:13:14] } 35... f5 { [%eval 0.3] [%clk 0:10:00] } 36. h4 { [%eval 0.0] [%clk 0:11:40] } 36... e3 { [%eval 0.09] [%clk 0:05:03] } 37. Re2 { [%eval 0.21] [%clk 0:10:49] } 37... Re7 { [%eval 0.23] [%clk 0:04:59] } 38. Kd3 { [%eval 0.05] [%clk 0:08:47] } 38... Rfe8 { [%eval 0.0] [%clk 0:04:58] } 39. h5 { [%eval 0.0] [%clk 0:05:57] } 39... gxh5 { [%eval 0.0] [%clk 0:03:53] } 40. Rd5 { [%eval 0.0] [%clk 0:35:47] } 40... h4 { [%eval 0.0] [%clk 0:33:32] } 41. Rxf5 { [%eval 0.0] [%clk 0:34:05] } 41... Rd7+ { [%eval 0.0] [%clk 0:24:41] } 42. Kc2 { [%eval 0.0] [%clk 0:33:53] } 42... Kg7 { [%eval 0.0] [%clk 0:18:44] } 43. Rg2+ { [%eval 0.0] [%clk 0:33:14] } 43... Kh8 { [%eval 0.0] [%clk 0:19:02] } 44. Re2 { [%eval 0.0] [%clk 0:33:42] } 44... Kg7 { [%eval 0.0] [%clk 0:19:06] } 45. Rg2+ { [%eval 0.0] [%clk 0:32:00] } 45... Kh8 { [%eval 0.0] [%clk 0:19:25] } 46. Re2 { [%eval 0.0] [%clk 0:32:25] } 46... Kg7 { [%eval 0.0] [%clk 0:19:12] } 1/2-1/2
+
+

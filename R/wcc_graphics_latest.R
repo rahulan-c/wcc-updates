@@ -12,16 +12,16 @@
 output_format <- "png"
 all_games_cols <- 4 
 
-choice <- "nepo-ding"    # "carlsen-karjakin", "carlsen-caruana", "carlsen-nepo", "nepo-ding"
-todays_game <- 12
+choice <- "ding-gukesh"           # "carlsen-karjakin", "carlsen-caruana", "carlsen-nepo", "nepo-ding", "ding-gukesh"
+todays_game <- 11
 todays_result <- "p2_win"         # "p1_win", "p2_win", "draw"
-latest_game <- 13        # the variable {todays_game} OR the game number (13)
-add_annotations <- TRUE
+latest_game <- todays_game        # the variable {todays_game} OR the game number (13)
+add_annotations <- FALSE
 
 # ---- ANNOTATIONS ------------------------------------------------------------
 
-# Game 2 
-annotations_2 <- tibble::tibble(
+# Nepo-Ding, Game 2 
+annotations_nepoding_2 <- tibble::tibble(
   ply = c(7, 23, 36,58),
   comment = c("Ding springs a major surprise with<br><b><span style = 'color:#922724;'>4. h3</span></b>,a novelty according to the<br>Lichess Masters database.",
               "In the game's critical moment, Ding thinks<br>for 35 minutes before playing <b><span style = 'color:#922724;'>12. Nxf6</span></b>;<br>however, the myriad subsequent complications<br>soon appear to favour his opponent.",
@@ -35,8 +35,8 @@ annotations_2 <- tibble::tibble(
   y_just = c(1, 1, 1, 1)
 )
 
-# Game 12
-annotations_12 <- tibble::tibble(
+# Nepo-Ding, Game 12
+annotations_nepoding_12 <- tibble::tibble(
   ply = c(5, 12, 39, 50, 57, 68, 75),
   comment = c(
     "<b><span style = 'color:#922724;'>e3</span></b> heralds the Colle System,<br>another opening surprise<br>from Ding.",
@@ -57,7 +57,7 @@ annotations_12 <- tibble::tibble(
 
 
 # Pick annotations for today's game plot
-annotations <- annotations_12
+annotations <- annotations_nepoding_12
 
 # Automatically construct rest of annotation data (arrows etc)
 # TODO
@@ -70,8 +70,9 @@ font_1 <- "Noto Sans"
 
 # ---- COLOUR CHOICES ---------------------------------------------------------
 
-colours_bluered <- c("#006994", "#006994", "#922724", "#922724")
-colours <- colours_bluered
+# colours_bluered <- c("#006994", "#006994", "#922724", "#922724")
+colours_pinkblue <- c("#bc5090", "#bc5090", "#003f5c", "#003f5c")
+colours <- colours_pinkblue
 
 p1_col <- colours[1]             
 p1_dark_col <- colours[2]
@@ -127,6 +128,28 @@ logo_path <- paste0(here::here(), "/lichess_logo.png")
 white_pawn_path <- paste0(here::here(), "/w_pawn_svg_NoShadow.png")
 black_pawn_path <- paste0(here::here(), "/b_pawn_svg_NoShadow.png")
 
+
+# ---- MATCH DETAILS ----------------------------------------------------------
+
+# Ding vs Gukesh (November 2024)
+if(choice == "ding-gukesh"){
+  p1 <- "Ding Liren"
+  p2 <- "Gukesh Dommaraju"
+  site <- "Singapore"
+  p2_elo <- "2500"
+  p1_elo <- "2500"
+  p2_flag <- "IND"
+  p1_flag <- "CHI"
+  match_length <- 15
+  match_year <- 2024
+  dates <- c(
+    "Mon 25/11", "Tue 26/11", "Wed 27/11", "Fri 29/11", "Sat 30/11", "Sun 1/12", 
+    "Tue 3/12", "Wed 4/12", "Thu 5/12", "Sat 7/12", "Sun 8/12", "Mon 9/12", 
+    "Wed 11/12", "Thu 12/12", "Fri 13/12"
+  )
+}
+
+# Nepo vs Ding (Astana, April 2024)
 if(choice == "nepo-ding"){
   p1 <- "Ian Nepomniachtchi"
   p2 <- "Ding Liren"
@@ -195,7 +218,7 @@ if(choice == "carlsen-karjakin"){
   )
 }
 
-game_titles <- c(paste0("Game ", c(1:(match_length - 1))), "Tiebreaks")
+game_titles <- c(paste0("Game ", c(1:(match_length - 1))), "Tiebreaks (if required)")
 
 
 # ----  READ DATA  ------------------------------------------------------------
@@ -558,7 +581,7 @@ today_plot <- match_plots[[todays_game]]
 
 # Construct element
 today_element <- today_plot +
-  labs(title = glue("**Game 12 - chaos in the Colle**"),
+  labs(title = glue("**Game 11 - Gukesh grabs the lead**"),
        x = "Evaluation",
        y = "Move") +
   
@@ -714,8 +737,8 @@ p2_score <- ifelse(is.integer(p2_score - 0.5),
                      "\u00bd"),
                    as.character(p2_score))
 
-p1_score <- "6.5"
-p2_score <- "6.5"
+# p1_score <- "6.5"
+# p2_score <- "6.5"
 
 
 # Placeholder
@@ -835,7 +858,7 @@ footer <- grid::grobTree(
   
   # Footer text
   grid::textGrob(
-    label = paste0("Analysis by Stockfish 15.1 NNUE"),
+    label = paste0("Analysis by Stockfish 17 NNUE"),
                    x = 0, y = 0.5,
                    hjust = 0, vjust = 1,
                    gp = grid::gpar(

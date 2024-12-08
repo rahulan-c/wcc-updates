@@ -1,0 +1,24 @@
+[Event "FIDE World Championship Match 2024"]
+[Site "Singapore SGP"]
+[Date "2024.12.08"]
+[Round "11"]
+[White "Gukesh D"]
+[Black "Ding, Liren"]
+[Result "1-0"]
+[WhiteElo "2783"]
+[WhiteTitle "GM"]
+[WhiteFideId "46616543"]
+[BlackElo "2728"]
+[BlackTitle "GM"]
+[BlackFideId "8603677"]
+[TimeControl "40/7200:1800+30"]
+[Variant "Standard"]
+[ECO "A09"]
+[Opening "Réti Opening: Reversed Blumenfeld Gambit"]
+[Annotator "https://lichess.org/broadcast/-/-/z3yejSAa"]
+[StudyName "Game 11"]
+[ChapterName "Gukesh D - Ding, Liren"]
+
+1. Nf3 { [%eval 0.14] [%clk 1:59:56] } 1... d5 { [%eval 0.18] [%clk 1:59:30] } 2. c4 { [%eval 0.0] [%clk 1:59:49] } 2... d4 { [%eval 0.0] [%clk 1:58:16] } 3. b4 { [%eval 0.0] [%clk 1:59:42] } 3... c5 { [%eval 0.0] [%clk 1:57:55] } 4. e3 { [%eval 0.0] [%clk 1:59:35] } 4... Nf6 { [%eval -0.03] [%clk 1:19:38] } 5. a3 { [%eval 0.0] [%clk 1:59:28] } 5... Bg4 { [%eval 0.14] [%clk 0:57:25] } 6. exd4 { [%eval 0.16] [%clk 1:59:15] } 6... cxd4 { [%eval 0.18] [%clk 0:57:14] } 7. h3 { [%eval 0.11] [%clk 1:59:10] } 7... Bxf3 { [%eval 0.21] [%clk 0:51:46] } 8. Qxf3 { [%eval 0.29] [%clk 1:59:02] } 8... Qc7 { [%eval 0.37] [%clk 0:51:29] } 9. d3 { [%eval -0.01] [%clk 1:53:36] } 9... a5 { [%eval -0.05] [%clk 0:51:10] } 10. b5 { [%eval -0.22] [%clk 1:53:11] } 10... Nbd7 { [%eval -0.2] [%clk 0:51:07] } 11. g3 { [%eval -0.22] [%clk 0:52:54] } 11... Nc5 { [%eval -0.24] [%clk 0:50:58] } 12. Bg2 { [%eval -0.3] [%clk 0:45:29] } 12... Nfd7 { [%eval -0.32] [%clk 0:44:10] } 13. O-O { [%eval -0.24] [%clk 0:42:02] } 13... Ne5 { [%eval -0.22] [%clk 0:44:07] } 14. Qf4 { [%eval -0.17] [%clk 0:37:33] } 14... Rd8 { [%eval -0.17] [%clk 0:42:21] } 15. Rd1?! { [%eval -0.83] } { Inaccuracy. Nd2 was best. } { [%clk 0:36:18] } (15. Nd2 e6 16. Rb1 Qb8 17. b6 a4 18. Ne4 Ncxd3 19. Qd2 Nxc1 20. Qxc1 Be7) 15... g6?! { [%eval 0.19] } { Inaccuracy. e6 was best. } { [%clk 0:39:46] } (15... e6 16. b6) 16. a4 { [%eval 0.13] [%clk 0:23:17] } 16... h5 { [%eval 0.48] [%clk 0:31:33] } 17. b6 { [%eval 0.26] [%clk 0:21:48] } 17... Qd6 { [%eval 0.19] [%clk 0:19:33] } 18. Ba3 { [%eval 0.29] [%clk 0:21:47] } 18... Bh6 { [%eval 0.23] [%clk 0:19:28] } 19. Bxc5 { [%eval 0.26] [%clk 0:21:05] } 19... Qxc5 { [%eval 0.27] [%clk 0:19:25] } 20. Qe4 { [%eval 0.32] [%clk 0:21:01] } 20... Nc6 { [%eval 0.31] [%clk 0:18:31] } 21. Na3 { [%eval 0.55] [%clk 0:20:02] } 21... Rd7 { [%eval 0.97] [%clk 0:15:26] } 22. Nc2 { [%eval 0.54] [%clk 0:19:19] } 22... Qxb6 { [%eval 0.56] [%clk 0:14:17] } 23. Rab1 { [%eval 0.62] [%clk 0:17:35] } 23... Qc7 { [%eval 0.42] [%clk 0:14:12] } 24. Rb5 { [%eval 0.61] [%clk 0:15:54] } 24... O-O { [%eval 0.53] [%clk 0:14:08] } 25. Na1?! { [%eval -0.04] } { Inaccuracy. Rdb1 was best. } { [%clk 0:14:48] } (25. Rdb1) 25... Rb8 { [%eval 0.42] [%clk 0:07:50] } 26. Nb3 { [%eval 0.47] [%clk 0:14:42] } 26... e6?! { [%eval 1.45] } { Inaccuracy. Rd6 was best. } { [%clk 0:07:42] } (26... Rd6) 27. Nc5 { [%eval 1.38] [%clk 0:13:32] } 27... Re7 { [%eval 1.34] [%clk 0:07:41] } 28. Rdb1?! { [%eval 0.72] } { Inaccuracy. Nxb7 was best. } { [%clk 0:13:12] } (28. Nxb7) 28... Qc8?? { [%eval 5.17] } { Blunder. Nb4 was best. } { [%clk 0:07:14] } (28... Nb4 29. Nxb7) 29. Qxc6 { [%eval 5.06] [%clk 0:12:57] } 1-0
+
+

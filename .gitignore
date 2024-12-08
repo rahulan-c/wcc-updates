@@ -43,3 +43,13 @@ vignettes/*.pdf
 
 # Outputs
 outputs/*
+
+# Tests
+R/tests/*
+R/ss/*
+
+# Old scripts
+R/read_pgn.R
+R/compile_alltime_match_game_data.R
+R/fonts_colours.R
+R/read_pgn.R
